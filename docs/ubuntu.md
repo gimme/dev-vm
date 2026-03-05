@@ -50,24 +50,24 @@ sudo apt install -y tmux
 
 ```sh
 cat << 'EOF' > ~/.tmux.conf
-# Recommended defaults (tmux-sensible + tmux FAQ)
-set -g mouse on
-set -sg escape-time 10
-set -g history-limit 50000
-set -g focus-events on
+# General settings (good defaults)
 set -g default-terminal "tmux-256color"
+set -sg escape-time 50
+set -g mouse on
+
+# Prefix: C-a instead of C-b
+set -g prefix C-a
+unbind C-b
+bind C-a send-prefix
 
 # Window/pane numbering from 1 (matches keyboard layout)
 set -g base-index 1
 setw -g pane-base-index 1
 set -g renumber-windows on
 
-# Reload config: prefix + R
-bind R source-file ~/.tmux.conf \; display-message "Config reloaded"
-
-# Session persistence across VM restarts (via tmux-resurrect)
-# Save: prefix + Ctrl-s | Restore: prefix + Ctrl-r
+# Plugins
 set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
 set -g @plugin 'tmux-plugins/tmux-resurrect'
 run '~/.tmux/plugins/tpm/tpm'
 EOF
@@ -83,23 +83,29 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 **Usage:**
 
 ```sh
-tmux                    # start new session
-tmux new -s work        # start named session
-tmux ls                 # list sessions
-tmux attach -t work     # reattach to session
+tmux                   # start new session
+tmux new -s work       # start named session
+tmux ls                # list sessions
+tmux a -t work         # attach to session
+tmux kill-ses -t work  # end session
 ```
 
-Inside tmux: `prefix` is `Ctrl+b` by default.
+Inside tmux: `prefix` is `Ctrl+a`.
 
 | Action | Keys |
 |---|---|
 | Detach (session keeps running) | `prefix d` |
+| Rename session | `prefix $` |
+| Kill session | `prefix :` then `kill-ses` |
 | Vertical split | `prefix %` |
 | Horizontal split | `prefix "` |
 | Navigate panes | `prefix arrow` |
+| Kill pane | `prefix x` |
 | Maximize/restore pane | `prefix z` |
 | New window | `prefix c` |
 | Next/previous window | `prefix n` / `prefix p` |
+| Reload config | `prefix R` |
+| Save/restore session | `prefix Ctrl-s` / `prefix Ctrl-r` |
 
 </details>
 
@@ -194,7 +200,7 @@ The default installs SDKMAN's recommended JDK. To pick a specific version:
 
 ```sh
 sdk list java                    # browse available versions
-sdk install java <identifier>    # e.g. 21.0.5-tem for Temurin 21
+sdk install java <identifier>    # e.g. 21-tem for Temurin 21
 ```
 
 </details>
@@ -205,7 +211,9 @@ AI coding agent from Anthropic. Requires a [subscription](https://claude.com/pri
 
 ```sh
 curl -fsSL https://claude.ai/install.sh | bash
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+echo 'alias claude="claude --dangerously-skip-permissions"' >> ~/.bashrc
+source ~/.bashrc
 ```
 
 Run inside a project directory, ideally in a tmux session so it survives SSH disconnects:
