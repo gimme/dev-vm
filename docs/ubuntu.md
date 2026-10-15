@@ -74,6 +74,11 @@ set -g base-index 1
 setw -g pane-base-index 1
 set -g renumber-windows on
 
+# New windows and splits open in the current pane's directory
+bind c new-window -c "#{pane_current_path}"
+bind '"' split-window -c "#{pane_current_path}"
+bind % split-window -h -c "#{pane_current_path}"
+
 # Plugins
 set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-sensible'
