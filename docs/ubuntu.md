@@ -106,6 +106,7 @@ Inside tmux: `prefix` is `Ctrl+a`.
 | Detach (session keeps running) | `prefix d` |
 | Rename session | `prefix $` |
 | Kill session | `prefix :` then `kill-ses` |
+| Choose session / last session | `prefix s` / `prefix L` |
 | Vertical split | `prefix %` |
 | Horizontal split | `prefix "` |
 | Navigate panes | `prefix arrow` |
@@ -113,6 +114,7 @@ Inside tmux: `prefix` is `Ctrl+a`.
 | Maximize/restore pane | `prefix z` |
 | New window | `prefix c` |
 | Next/previous window | `prefix n` / `prefix p` |
+| Choose window / last window | `prefix w` / `prefix l` or `prefix a` |
 | Copy mode (scroll, search, copy) | `prefix [` then vi keys, `q` to exit |
 | Paste / choose from copies | `prefix ]` / `prefix =` |
 | Reload config | `prefix R` |
