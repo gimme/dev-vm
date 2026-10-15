@@ -104,12 +104,12 @@ Inside tmux: `prefix` is `Ctrl+a`.
 | Action | Keys |
 |---|---|
 | Detach (session keeps running) | `prefix d` |
-| Rename session | `prefix $` |
+| Rename session / window | `prefix $` / `prefix ,` |
 | Kill session | `prefix :` then `kill-ses` |
 | Choose session / last session | `prefix s` / `prefix L` |
 | Vertical split | `prefix %` |
 | Horizontal split | `prefix "` |
-| Navigate panes | `prefix arrow` |
+| Navigate panes / last pane | `prefix arrow` / `prefix ;` |
 | Kill pane | `prefix x` |
 | Maximize/restore pane | `prefix z` |
 | New window | `prefix c` |
@@ -119,6 +119,7 @@ Inside tmux: `prefix` is `Ctrl+a`.
 | Paste / choose from copies | `prefix ]` / `prefix =` |
 | Reload config | `prefix R` |
 | Save/restore session | `prefix Ctrl-s` / `prefix Ctrl-r` |
+| List all key bindings | `prefix ?` |
 
 </details>
 
