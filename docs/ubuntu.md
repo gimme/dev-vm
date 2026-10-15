@@ -45,6 +45,14 @@ Session persistence across SSH disconnects — if your connection drops, `tmux a
 sudo apt install -y tmux
 ```
 
+Keep panes alive when a process inside runs out of memory. Ubuntu's tmux runs each pane in its own systemd scope, and by default systemd stops the whole scope after an OOM kill — the shell dies with it, and if it was the last pane, the session is gone. This makes systemd kill only the offending process:
+
+```sh
+mkdir -p ~/.config/systemd/user/tmux-spawn-.scope.d
+printf "[Scope]\nOOMPolicy=continue\n" > ~/.config/systemd/user/tmux-spawn-.scope.d/oom.conf
+systemctl --user daemon-reload
+```
+
 <details>
 <summary>Configuration and usage</summary>
 
@@ -54,6 +62,7 @@ cat << 'EOF' > ~/.tmux.conf
 set -g default-terminal "tmux-256color"
 set -sg escape-time 50
 set -g mouse on
+setw -g mode-keys vi
 
 # Prefix: C-a instead of C-b
 set -g prefix C-a
@@ -104,6 +113,8 @@ Inside tmux: `prefix` is `Ctrl+a`.
 | Maximize/restore pane | `prefix z` |
 | New window | `prefix c` |
 | Next/previous window | `prefix n` / `prefix p` |
+| Copy mode (scroll, search, copy) | `prefix [` then vi keys, `q` to exit |
+| Paste / choose from copies | `prefix ]` / `prefix =` |
 | Reload config | `prefix R` |
 | Save/restore session | `prefix Ctrl-s` / `prefix Ctrl-r` |
 
