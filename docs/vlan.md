@@ -11,7 +11,7 @@ VLAN setup on an EdgeOS router (e.g. Ubiquiti EdgeRouter). Change the values bel
 ## Goal
 
 Create an isolated network for the dev VM that:
-- Has internet access (HTTP, HTTPS, SSH, ICMP)
+- Has internet access (HTTP, HTTPS, SSH, NTP, ICMP)
 - Cannot reach the main LAN
 - Gets its own DHCP and DNS via the router
 
@@ -91,6 +91,18 @@ set firewall name DEV_IN rule 50 action accept
 set firewall name DEV_IN rule 50 description "Allow ICMP"
 set firewall name DEV_IN rule 50 protocol icmp
 
+# Allow NTP (keep the clock in sync)
+set firewall name DEV_IN rule 55 action accept
+set firewall name DEV_IN rule 55 description "Allow NTP"
+set firewall name DEV_IN rule 55 protocol udp
+set firewall name DEV_IN rule 55 destination port 123
+
+# Allow NTS-KE (key exchange for authenticated NTP, which newer Ubuntu releases use by default)
+set firewall name DEV_IN rule 56 action accept
+set firewall name DEV_IN rule 56 description "Allow NTS-KE"
+set firewall name DEV_IN rule 56 protocol tcp
+set firewall name DEV_IN rule 56 destination port 4460
+
 # Optional: allow Tailscale (only if using Tailscale for remote access)
 set firewall name DEV_IN rule 60 action accept
 set firewall name DEV_IN rule 60 description "Allow Tailscale"
@@ -103,10 +115,10 @@ set firewall name DEV_IN rule 60 destination port 41641
 # Default: drop
 set firewall name DEV_LOCAL default-action drop
 
-# Allow DNS (resolve hostnames)
+# Allow DNS (resolve hostnames; TCP is the fallback for answers too large for UDP)
 set firewall name DEV_LOCAL rule 10 action accept
 set firewall name DEV_LOCAL rule 10 description "Allow DNS"
-set firewall name DEV_LOCAL rule 10 protocol udp
+set firewall name DEV_LOCAL rule 10 protocol tcp_udp
 set firewall name DEV_LOCAL rule 10 destination port 53
 
 # Allow DHCP (get an IP address)
